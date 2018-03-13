@@ -1,0 +1,52 @@
+#NAME sttforall.
+
+type : Type.
+
+arr : type -> type -> type.
+
+bool : type.
+
+def eta : type -> Type.
+
+ptype : Type.
+
+p : type -> ptype.
+
+def etap : ptype -> Type.
+
+forallK : (type -> ptype) -> ptype.
+
+def eps : eta bool -> Type.
+
+impl : eta bool -> eta bool -> eta bool.
+
+forall : t:type -> (eta t -> eta bool) -> eta bool.
+
+forallP : (type -> eta bool) -> eta bool.
+
+[] eta --> t => etap (p t).
+
+[l,r] etap (p (arr l r)) --> eta l -> eta r.
+
+[f] etap (forallK f) --> x : type -> etap (f x).
+
+[t,f] eps (forall t f) --> x:eta t -> eps (f x).
+
+[l,r] eps (impl l r) --> eps l -> eps r.
+
+[f] eps (forallP f) --> x:type -> eps (f x).
+
+def leibniz : etap (forallK (X:type => p (arr X (arr X bool)))) :=
+    X:type  =>
+    x:eta X =>
+    y:eta X =>
+    forall (arr X bool) (P => impl (P x) (P y)).
+
+def refl : eps (forallP (X => forall X (x:eta X => leibniz X x x))) :=
+    X:type  =>
+    x:eta X =>
+    P:eta (arr X bool) =>
+    p:eps (P x) => p.
+
+#GDT etap.
+#GDT eps.
