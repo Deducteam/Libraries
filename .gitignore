@@ -1,0 +1,7 @@
+# Dedukti files.
+*.dko
+
+# Editor temporary files.
+*~
+\#*\#
+.\#*
