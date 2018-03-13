@@ -22,7 +22,7 @@ Generator: [Holide](https://github.com/Deducteam/Holide) from [OpenTheory](http:
 
 An encoding of OpenTheory (see [Ali Assaf Thesis](https://hal.inria.fr/tel-01235303))
 
-## Dedukti[STT]
+## STT
 
 Dedukti file: *stt.dk*
 
