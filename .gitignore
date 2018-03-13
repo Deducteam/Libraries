@@ -1,6 +1,6 @@
 # Dedukti files.
 *.dko
-*/.depend
+.depend
 
 # Editor temporary files.
 *~
