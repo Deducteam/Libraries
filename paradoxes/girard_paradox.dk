@@ -1,4 +1,4 @@
-#NAME paradox.
+#NAME girard_paradox.
 
 (; This is a formulation by Per Martin-Löf of Girard Paradox. It comes
 from pp. 7 to 9 of the 1972 presentation of MLTT.
