@@ -61,7 +61,7 @@ def prod : s1 : Sort -> s2 : Sort -> a : Univ s1 -> b : (Term s1 a -> Univ s2) -
 
 [s : Sort, a : Univ s] lift s s a --> a.
 [s1 : Sort, s2 : Sort, s3 : Sort, a : Univ s1]
-  lift (rule s1 s2) s3 (lift s1 s2 a) -->
+  lift _ s3 (lift s1 s2 a) -->
   lift s1 (max s2 s3) a.
 [s1 : Sort, s2 : Sort, s3 : Sort, a : Univ s1, b : Term s1 a -> Univ s2]
   prod _ s2 (lift s1 s3 a) b -->
