@@ -2,10 +2,18 @@
 DKCHECK ?= dkcheck
 #put the path of your dkdep binary
 DKDEP ?= dkdep
-DKOPTIONS = -nl -errors-in-snf
+DKOPTIONS = $(DKFLAGS) -nl -errors-in-snf -e
 
 DKS = $(wildcard *.dk)
 DKOS = $(DKS:.dk=.dko)
+
+
+ifdef DKTIME
+DKCHECK_=time --format "TIME: %U" --output /dev/stdout $(DKCHECK) $(DKOPTIONS)
+else
+DKCHECK_=$(DKCHECK) $(DKOPTIONS)
+endif
+
 
 .PHONY:	all clean
 
@@ -13,8 +21,7 @@ all: $(DKOS)
 
 %.dko: %.dk .depend
 	@echo "FILE: $<"
-	#time --format "TIME: %U" --output /dev/stdout $(DKCHECK) $(DKOPTIONS) -e $<
-	$(DKCHECK) $(DKOPTIONS) -e $<
+	$(DKCHECK_) $<
 
 # standard .depend file generation
 .depend: $(DKS)
