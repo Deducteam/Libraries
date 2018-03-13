@@ -1,4 +1,4 @@
-#NAME paradox.
+#NAME girard_paradox_2.
 
 (; This is formulation of Girard/Burali-Forti Paradox wad proposed by
 favonia and implemented in Agda here:
