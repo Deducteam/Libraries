@@ -12,7 +12,7 @@ Dedukti file: *cic.dk*
 
 Generator: [Krajono](https://github.com/Deducteam/matita/tree/krajono) from [Matita](http://matita.cs.unibo.it/) files
 
-An encoding of The Calculus Of Inductive Constructions with a cumulative hierarchy of universes and one impredicative universe (see [Ali Assaf Thesis](https://hal.inria.fr/tel-01235303) (HAL)).
+An encoding of The Calculus Of Inductive Constructions with a cumulative hierarchy of universes and one impredicative universe (see [Ali Assaf Thesis](https://hal.inria.fr/tel-01235303)).
 
 ## OpenTheory
 
@@ -20,7 +20,7 @@ Dedukti file: *opentheory.dk*
 
 Generator: [Holide](https://github.com/Deducteam/Holide) from [OpenTheory](http://www.gilith.com/opentheory/article.html) article files
 
-An encoding of OpenTheory (see [Ali Assaf Thesis](https://hal.inria.fr/tel-01235303) (HAL))
+An encoding of OpenTheory (see [Ali Assaf Thesis](https://hal.inria.fr/tel-01235303))
 
 ## Dedukti[STT]
 
