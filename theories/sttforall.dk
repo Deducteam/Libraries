@@ -35,18 +35,3 @@ forallP : (type -> eta bool) -> eta bool.
 [l,r] eps (impl l r) --> eps l -> eps r.
 
 [f] eps (forallP f) --> x:type -> eps (f x).
-
-def leibniz : etap (forallK (X:type => p (arr X (arr X bool)))) :=
-    X:type  =>
-    x:eta X =>
-    y:eta X =>
-    forall (arr X bool) (P => impl (P x) (P y)).
-
-def refl : eps (forallP (X => forall X (x:eta X => leibniz X x x))) :=
-    X:type  =>
-    x:eta X =>
-    P:eta (arr X bool) =>
-    p:eps (P x) => p.
-
-#GDT etap.
-#GDT eps.
