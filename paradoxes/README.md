@@ -45,10 +45,19 @@ U⁻. We wrote this term in the Dedukti encoding of System U⁻ in file
 - Russell Paradox
 
 Russell paradox is the simplest paradox of set theory: let R be the
-set {x | x ∉ x}, we have R ∈ R if and only if R ∉ R.  We provide two
-encodings of Russell paradox : the first one in file `russell.dk`
-encodes sets as trees with arbitrary branching using an impredicative
-inductive type; I do not know who discovered this version of Russell
-paradox in type theory first. The second one in file `miquel.dk` is
-due to Alexandre Miquel, it is expressed in System U⁻ and encodes sets
-as pointed graphs quotiented by bisimulation.
+set {x | x ∉ x}, we have R ∈ R if and only if R ∉ R.  We provide
+several encodings of Russell paradox: the first one in file
+`russell.dk` encodes sets as trees with arbitrary branching using an
+impredicative inductive type; I do not know who discovered this
+version of Russell paradox in type theory first. The second one in
+file `miquel.dk` is due to Alexandre Miquel, it is expressed in System
+U⁻ and encodes sets as pointed graphs quotiented by bisimulation.
+Four versions of Russell Paradox in Deduction Modulo due to Gilles
+Dowek and Benjamin Werner are also presented; the simplest one is
+`dowek_werner_russell.dk` which is very close to the Liar paradox in
+`liar.dk`, then Crabbés conterexample to the termination of
+cut-elimination in ZF is presented first as a logical paradox in file
+`dowek_werner_crabbe.dk` and then in ZF in file
+`dowek_werner_crabbe_zf.dk`. Finally, the file
+`dowek_werner_russell_terminating.dk` presents an encoding of Russell
+paradox in Deduction Modulo a convergent rewrite system.
