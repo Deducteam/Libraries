@@ -1,5 +1,7 @@
 #NAME girard_paradox.
 
+(; Author: Raphaël Cauderlier, License: CC0 ;)
+
 (; This is a formulation by Per Martin-Löf of Girard Paradox. It comes
 from pp. 7 to 9 of the 1972 presentation of MLTT.
 

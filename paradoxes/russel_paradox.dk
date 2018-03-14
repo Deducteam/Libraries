@@ -1,5 +1,7 @@
 #NAME russel_paradox.
 
+(; Author: Raphaël Cauderlier, License: CC0 ;)
+
 (; An expression of Russell Paradox.
 
    This uses three inductive types: Leibnitz equality, Sigma types and
