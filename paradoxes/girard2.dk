@@ -1,5 +1,7 @@
 #NAME girard_paradox_2.
 
+(; Author: Raphaël Cauderlier, License: CC0 ;)
+
 (; This is formulation of Girard/Burali-Forti Paradox wad proposed by
 favonia and implemented in Agda here:
 https://gist.github.com/favonia/cc7a504839c5fbb3ebc6 ;)
