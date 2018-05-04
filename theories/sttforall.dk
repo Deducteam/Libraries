@@ -24,7 +24,7 @@ forall : t:type -> (eta t -> eta bool) -> eta bool.
 
 forallP : (type -> eta bool) -> eta bool.
 
-[] eta --> t => etap (p t).
+[] eta --> t : type => etap (p t).
 
 [l,r] etap (p (arr l r)) --> eta l -> eta r.
 

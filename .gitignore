@@ -6,3 +6,6 @@
 *~
 \#*\#
 .\#*
+
+# Working directory with generated files
+theories/Confluence/
