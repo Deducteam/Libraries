@@ -1,9 +1,6 @@
 (; Implementation of a system presented in:             ;)
 (; Typed self-evaluation via intensional type functions ;)
 
-
-#NAME mu.
-
 kind : Type.
 
 def eta : kind -> Type.
