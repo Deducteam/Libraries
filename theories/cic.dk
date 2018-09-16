@@ -20,11 +20,6 @@ def succ : Sort -> Sort.
 [] succ prop --> type z.
 [i] succ (type i) --> type (s i).
 
-(; Universe cumulativity ;)
-def next : Sort -> Sort.
-[] next prop --> type z.
-[i] next (type i) --> type (s i).
-
 (; Universe product rules ;)
 def rule : Sort -> Sort -> Sort.
 [s1] rule s1 prop --> prop.
