@@ -1,5 +1,3 @@
-#NAME stt.
-
 type : Type.
 
 prop : type.
@@ -19,12 +17,3 @@ def eps : eta prop -> Type.
 [A, f] eps (forall A f) --> x:eta A -> eps (f x).
 
 [l, r] eps (impl l r) --> eps l -> eps r.
-
-(; Rien n'interdit d'ajouter un jour, ce qui justifie de refuser la règle eps (forall A f) 
-
-e : type.
-
-def phi : eta e -> eta prop.
-[x] phi x --> forall e phi.
-
-(; Cette règle est terminante et ne fait aucun appel à eps, donc est entièrement disjointe de la règle eps (forall A f) dans le call graph ;)
