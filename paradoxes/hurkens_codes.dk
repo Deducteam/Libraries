@@ -116,10 +116,10 @@ _kind : Sort.
 (;------------------------  Logic encoding  -----------------------;)
 (;-----------------------------------------------------------------;)
 
-def type : Type := Univ _type.
+def type : Type         := Univ _type.   (;  Term _kind (univ _type _kind I)  ;)
 def term : type -> Type := Term _type.
-def prop : type := univ _prop _type I.
-def Prop := term prop.
+def prop : type         := univ _prop _type I.
+def Prop                := term prop.
 
 def proof : Prop -> Type := Term _prop.
 
