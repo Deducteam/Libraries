@@ -1,0 +1,143 @@
+Bool : Type.
+T : Bool.
+F : Bool.
+
+def and : Bool -> Bool -> Bool.
+[] and F _ --> F
+[] and _ F --> F
+[] and T T --> T.
+
+def or : Bool -> Bool -> Bool.
+[] or T _ --> T
+[] or _ T --> T
+[] or F F --> F.
+
+def not : Bool -> Bool.
+[] not T --> F
+[] not F --> T.
+
+def iif : Bool -> Bool -> Bool.
+[] iif T T --> T
+[] iif T F --> F
+[] iif F T --> F
+[] iif F F --> T.
+
+def impl : Bool -> Bool -> Bool.
+[] impl F _ --> T
+[] impl T T --> T
+[] impl T F --> F.
+
+
+Variable : Type.
+(; We need decidable equality on variables ;)
+def eq : Variable -> Variable -> Bool.
+[x  ] eq x x --> T.
+[x,y] eq x y --> F.
+
+
+
+Lit : Type.
+mk_Lit : Bool -> Variable -> Lit.
+
+Clause : Type.
+Cfalse : Clause.
+Ctrue  : Clause.
+def Ccons  : Lit -> Clause -> Clause.
+[] Ccons _ Ctrue --> Ctrue.
+
+Formula : Type.
+Ftrue : Formula.
+Ffalse : Formula.
+def Fcons : Clause -> Formula -> Formula.
+[  ] Fcons _      Ffalse --> Ffalse
+[  ] Fcons Cfalse _      --> Ffalse
+[tl] Fcons Ctrue  tl     --> tl.
+
+def consistent : Formula -> Bool.
+def no_contradict : Bool -> Variable -> Formula -> Bool.
+
+(; The empty formula is consistent ;)
+[] consistent Ftrue     --> T
+[] consistent Ffalse    --> F
+
+(; A formula with a non-unit clause is not consistent (yet) ;)
+[] consistent (Fcons (Ccons _ (Ccons _ _)) _) --> F.
+
+(; A formula starting with a unit clause is consistent if the rest is
+   and the unit clause doesn't contradict the rest. ;)
+[p,v,tl]
+  consistent (Fcons (Ccons (mk_Lit p v) Cfalse) tl)
+  -->
+  and (consistent tl) (no_contradict p v tl)
+
+(; A formula with a non-unit clause is not consistent (yet) ;)
+[] consistent (Fcons (Ccons _ (Ccons _ _)) _) --> F.
+
+[] no_contradict _ _ Ftrue                           --> T
+[] no_contradict _ _ (Fcons (Ccons _ (Ccons _ _)) _) --> F (; Should never happen ;)
+[p,v,p',v',tl]
+  no_contradict p v (Fcons (Ccons (mk_Lit p' v') Cfalse) tl)
+  -->
+  and (impl (eq v v') (iif p p')) (no_contradict p v tl).
+
+
+def inconsistent : Formula -> Bool.
+[] inconsistent Ffalse      --> T
+[] inconsistent Ftrue       --> F
+[] inconsistent (Fcons _ _) --> F.
+
+
+def iteF : Bool -> Formula -> Formula -> Formula.
+[A] iteF T A _ --> A.
+[A] iteF F A _ --> A.
+
+def iteC : Bool -> Clause -> Clause -> Clause.
+[A] iteC T A _ --> A.
+[A] iteC F A _ --> A.
+
+
+def unit_falsify_clause : Bool -> Variable -> Clause -> Bool.
+def unit_propagate_clause : Bool -> Variable -> Clause -> Clause.
+def unit_propagate        : Bool -> Variable -> Formula -> Formula.
+
+[] unit_propagate _ _ Ffalse --> Ffalse
+[] unit_propagate _ _ Ftrue  --> Ftrue
+[p,v,clause,tl]
+  unit_propagate p v (Fcons clause tl)
+  -->
+  Fcons (unit_propagate_clause p v clause) (unit_propagate p v tl).
+
+
+[] unit_propagate_clause _ _ Cfalse --> Cfalse
+[] unit_propagate_clause _ _ Ctrue --> Ctrue
+[p,v,p',v',tl]
+  unit_propagate_clause p v (Ccons (mk_Lit p' v') tl)
+  -->
+  iteC (eq v v')
+  	(iteC (iif p p') tl Cfalse)
+	(Ccons (mk_Lit p' v') (unit_propagate_clause p v tl)).
+
+
+Occ : Type.
+Onil  : Occ.
+Ook   : Bool -> Variable -> Occ -> Occ.
+Ofail : Variable -> Occ -> Occ.
+
+def iteO : Bool -> Occ -> Occ -> Occ.
+[A] iteO T A _ --> A
+[A] iteO F _ A --> A.
+
+def add_occ : Bool -> Variable -> Occ -> Occ.
+[p,v] add_occ p v Onil --> Ook p v Onil.
+[p,v,v',tl]
+  add_occ p v (Ofail v' tl)
+  -->
+  Ofail v' (iteO (eq v v') tl (add_occ p v tl))
+[p,v,p',v',tl]
+  add_occ p v (Ook p' v' tl)
+  -->
+  iteO (eq v v')
+    (iteO (iif p p')
+      (Ook p' v' tl)
+      (Ofail v' tl))
+    (Ook p' v' (add_occ p v tl)).
