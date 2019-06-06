@@ -2,7 +2,7 @@
 DKCHECK ?= dkcheck
 #put the path of your dkdep binary
 DKDEP ?= dkdep
-DKOPTIONS = $(DKFLAGS) -nl -errors-in-snf -e
+DKOPTIONS = $(DKFLAGS) --snf -e
 
 DKS = $(wildcard *.dk)
 DKOS = $(DKS:.dk=.dko)
