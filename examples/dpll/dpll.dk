@@ -1,3 +1,6 @@
+
+(; -------------------------    Booleans    ----------------------- ;)
+(; -------------------------    Variable    ----------------------- ;)
 Bool : Type.
 T : Bool.
 F : Bool.
@@ -28,22 +31,31 @@ def impl : Bool -> Bool -> Bool.
 [] impl T F --> F.
 
 
+
+(; -------------------------    Variable    ----------------------- ;)
+
 Variable : Type.
 (; We need decidable equality on variables ;)
 def eq : Variable -> Variable -> Bool.
-[x  ] eq x x --> T.
-[x,y] eq x y --> F.
+
+novar : Variable.
 
 
+(; -------------------------    Formulas    ----------------------- ;)
 
 Lit : Type.
-mk_Lit : Bool -> Variable -> Lit.
+Flit : Bool -> Variable -> Lit.
 
 Clause : Type.
 Cfalse : Clause.
 Ctrue  : Clause.
 def Ccons  : Lit -> Clause -> Clause.
 [] Ccons _ Ctrue --> Ctrue.
+
+def iteC : Bool -> Clause -> Clause -> Clause.
+[A] iteC T A _ --> A.
+[A] iteC F _ A --> A.
+
 
 Formula : Type.
 Ftrue : Formula.
@@ -53,8 +65,92 @@ def Fcons : Clause -> Formula -> Formula.
 [  ] Fcons Cfalse _      --> Ffalse
 [tl] Fcons Ctrue  tl     --> tl.
 
-def consistent : Formula -> Bool.
+def iteF : Bool -> Formula -> Formula -> Formula.
+[A] iteF T A _ --> A.
+[A] iteF F _ A --> A.
+
+
+
+
+(; ------------------------    Formulas CNF    -------------------- ;)
+
+def Fvar : Variable -> Formula.
+def Fnot : Formula -> Formula.
+def Fand : Formula -> Formula -> Formula.
+def For : Formula -> Formula -> Formula.
+
+
+[A,B] Fnot (For   A B) --> Fand (Fnot A) (Fnot B)
+[A,B] Fnot (Fand  A B) --> For  (Fnot A) (Fnot B)
+[A  ] Fnot (Fnot A )   --> A
+[   ] Fnot Ffalse      --> Ftrue
+[   ] Fnot Ftrue       --> Ffalse.
+
+
+[A,B,C] For (Fand A B) C --> Fand (For A B) (For B C).
+[A,B,C] For A (Fand B C) --> Fand (For A B) (For A C).
+
+
+[v] Fvar v --> Fcons (Ccons (Flit T v) Cfalse) Ftrue.
+
+[A] Fand A Ftrue  --> A
+[ ] Fand _ Ffalse --> Ffalse
+[A] Fand Ftrue A  --> A
+[ ] Fand Ffalse _ --> Ffalse.
+
+[ ] For _ Ftrue  --> Ftrue
+[ ] For Ftrue _  --> Ftrue
+[A] For A Ffalse --> A
+[A] For Ffalse A --> A.
+
+def Cor : Clause -> Clause -> Clause.
+[A] Cor Cfalse A      --> A
+[A] Cor A      Cfalse --> A
+[ ] Cor _      Ctrue  --> Ctrue
+[ ] Cor Ctrue  _      --> Ctrue.
+[l,l',A,B]
+  Cor (Ccons l A) (Ccons l' B)
+  -->
+  Ccons l (Ccons l' (Cor A B)).
+
+def Cnot : Clause -> Formula.
+[] Cnot Cfalse --> Ftrue
+[] Cnot Ctrue  --> Ffalse
+[p,v,A]
+  Cnot (Ccons (Flit p v) A)
+  -->
+  Fcons (Ccons (Flit (not p) v) Cfalse) (Cnot A).
+
+[A,B      ] Fnot (Fcons A B) -->
+            For (Cnot A) (Fnot B).
+[A,B,A',B'] For  (Fcons A A') (Fcons B B') -->
+            Fcons (Cor A B) (For A' B').
+[A,B,A',B'] Fand (Fcons A A') (Fcons B B') -->
+            Fcons A (Fcons B (Fand A' B')).
+
+
+
+
+(; ---------------------------------------------------------------- ;)
+(; ------------------------    Resolution    ---------------------- ;)
+(; ---------------------------------------------------------------- ;)
+
+
+(; --------------------    Contradiction test    ------------------ ;)
+
 def no_contradict : Bool -> Variable -> Formula -> Bool.
+
+[] no_contradict _ _ Ftrue                           --> T
+[] no_contradict _ _ (Fcons (Ccons _ (Ccons _ _)) _) --> F (; Should never happen ;)
+[p,v,p',v',tl]
+  no_contradict p v (Fcons (Ccons (Flit p' v') Cfalse) tl)
+  -->
+  and (impl (eq v v') (iif p p')) (no_contradict p v tl).
+
+
+(; ---------------------    Consistency test    ------------------- ;)
+
+def consistent : Formula -> Bool.
 
 (; The empty formula is consistent ;)
 [] consistent Ftrue     --> T
@@ -66,57 +162,110 @@ def no_contradict : Bool -> Variable -> Formula -> Bool.
 (; A formula starting with a unit clause is consistent if the rest is
    and the unit clause doesn't contradict the rest. ;)
 [p,v,tl]
-  consistent (Fcons (Ccons (mk_Lit p v) Cfalse) tl)
+  consistent (Fcons (Ccons (Flit p v) Cfalse) tl)
   -->
   and (consistent tl) (no_contradict p v tl)
 
-(; A formula with a non-unit clause is not consistent (yet) ;)
+(; A formula with a non-unit clause is not trivially consistent (yet) ;)
 [] consistent (Fcons (Ccons _ (Ccons _ _)) _) --> F.
 
-[] no_contradict _ _ Ftrue                           --> T
-[] no_contradict _ _ (Fcons (Ccons _ (Ccons _ _)) _) --> F (; Should never happen ;)
-[p,v,p',v',tl]
-  no_contradict p v (Fcons (Ccons (mk_Lit p' v') Cfalse) tl)
-  -->
-  and (impl (eq v v') (iif p p')) (no_contradict p v tl).
 
-
+(; Any formula containing Ffalse reduces to Ffalse automatically ;)
 def inconsistent : Formula -> Bool.
 [] inconsistent Ffalse      --> T
 [] inconsistent Ftrue       --> F
 [] inconsistent (Fcons _ _) --> F.
 
 
-def iteF : Bool -> Formula -> Formula -> Formula.
-[A] iteF T A _ --> A.
-[A] iteF F A _ --> A.
-
-def iteC : Bool -> Clause -> Clause -> Clause.
-[A] iteC T A _ --> A.
-[A] iteC F A _ --> A.
 
 
-def unit_falsify_clause : Bool -> Variable -> Clause -> Bool.
+
+
+(; ---------------------    Unit propagation    ------------------- ;)
+
 def unit_propagate_clause : Bool -> Variable -> Clause -> Clause.
-def unit_propagate        : Bool -> Variable -> Formula -> Formula.
+[] unit_propagate_clause _ _ Cfalse --> Cfalse
+[] unit_propagate_clause _ _ Ctrue  --> Ctrue
+[p,v,p',v',tl]
+  unit_propagate_clause p v (Ccons (Flit p' v') tl)
+  -->
+  iteC (eq v v')
+  	(iteC (iif p p') Ctrue tl)
+	(Ccons (Flit p' v') (unit_propagate_clause p v tl)).
 
-[] unit_propagate _ _ Ffalse --> Ffalse
-[] unit_propagate _ _ Ftrue  --> Ftrue
+def unit_propagate        : Bool -> Variable -> Formula -> Formula.
+[]    unit_propagate _ _ Ffalse --> Ffalse
+[p,v] unit_propagate p v Ftrue  --> Fcons (Ccons (Flit p v) Cfalse) Ftrue
 [p,v,clause,tl]
   unit_propagate p v (Fcons clause tl)
   -->
   Fcons (unit_propagate_clause p v clause) (unit_propagate p v tl).
 
+(; Lists of variables ;)
+VarList : Type.
+Vnil : VarList.
+Vcons : Variable -> VarList -> VarList.
+def is_in_varlist : Variable -> VarList -> Bool.
+[       ] is_in_varlist _ Vnil          --> F
+[v,hd,tl] is_in_varlist v (Vcons hd tl) --> or (eq v hd) (is_in_varlist v tl).
 
-[] unit_propagate_clause _ _ Cfalse --> Cfalse
-[] unit_propagate_clause _ _ Ctrue --> Ctrue
-[p,v,p',v',tl]
-  unit_propagate_clause p v (Ccons (mk_Lit p' v') tl)
-  -->
-  iteC (eq v v')
-  	(iteC (iif p p') tl Cfalse)
-	(Ccons (mk_Lit p' v') (unit_propagate_clause p v tl)).
+def full_unit_propagate : VarList -> Formula -> Formula -> Formula.
+[f] full_unit_propagate _ f Ftrue  --> f.
+[f] full_unit_propagate _ f Ffalse --> f.
+[visited,f,p,v,formula]
+    full_unit_propagate visited f
+      (Fcons (Ccons (Flit p v) Cfalse) formula)
+    -->
+    iteF (is_in_varlist v visited)
+	  (full_unit_propagate visited f formula)
+	  ( (new_f : Formula := unit_propagate p v f) =>
+	    full_unit_propagate (Vcons v visited) new_f new_f).
+[visited,f,formula]
+    full_unit_propagate visited f
+      (Fcons (Ccons _ (Ccons _ _)) formula)
+    -->
+    full_unit_propagate visited f formula.
 
+def units_propagate (f:Formula) : Formula := full_unit_propagate Vnil f f.
+
+
+
+(; -------------------    Variable selection    ------------------- ;)
+
+VarOpt : Type.
+VOnone : VarOpt.
+VOsome : Variable -> VarOpt.
+
+def select_var : Formula -> VarOpt.
+[  ] select_var Ffalse --> VOnone
+[  ] select_var Ftrue  --> VOnone
+[tl] select_var (Fcons (Ccons _ Cfalse) tl)  --> select_var tl
+[v ] select_var (Fcons (Ccons (Flit _ v) (Ccons _ _)) _)  --> VOsome v.
+
+
+(; ---------------------------    Solver    ----------------------- ;)
+
+def solve : Formula -> Formula.
+def try_solve : Formula -> Formula -> Formula.
+def solve_specialize : Formula -> VarOpt -> Formula.
+
+[f] solve f
+    -->
+    solve_specialize f (select_var f).
+
+[f  ] solve_specialize f VOnone --> f
+[f,v] solve_specialize f (VOsome v) -->
+  try_solve
+    (units_propagate (Fcons (Ccons (Flit T v) Cfalse) f))
+    (units_propagate (Fcons (Ccons (Flit F v) Cfalse) f)).
+
+[f      ] try_solve Ffalse        f --> f
+[f,hd,tl] try_solve (Fcons hd tl) f --> Fcons hd tl.
+
+
+
+
+(; WIP: Pure litteral elimination ;)
 
 Occ : Type.
 Onil  : Occ.
