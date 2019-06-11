@@ -1,0 +1,24 @@
+Printed : Type.
+Unsatisfiable : Printed.
+
+Assignment : Type.
+A : dpll.Variable -> dpll.Bool -> Assignment.
+E : Assignment.
+
+
+def F : Assignment -> Type.
+[] F (A _ _) -->  a:Assignment -> F a.
+[] F E       -->  Printed.
+Satisfiable : a:Assignment -> F a.
+
+
+def Unsolved : (f : dpll.Formula) -> a:Assignment -> F a.
+[] Unsolved dpll.Ffalse E --> Unsatisfiable.
+[] Unsolved dpll.Ftrue  --> Satisfiable.
+[b,v,F]
+  Unsolved (dpll.Fcons (dpll.Ccons (dpll.Flit b v) dpll.Cfalse) F)
+  -->
+  (Unsolved F) (A v b)
+  .
+
+def Print (f : dpll.Formula) : Printed := Unsolved f E.

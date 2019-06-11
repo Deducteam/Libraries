@@ -16,15 +16,22 @@ e : Variable.
 [x  ] dpll.eq x x --> dpll.T.
 [x,y] dpll.eq x y --> dpll.F.
 
-def f : Formula :=
+def sat_f : Formula :=
   and
    (not (var a))
    (or
      (and (var a) (var b))
      (not (or (var c) (var a)))).
 
-#EVAL[SNF] f.
+def unsat_f : Formula :=
+  and
+    (var c)
+    (and
+      (not (var a))
+        (or
+          (and (var a) (var b))
+          (not (or (var c) (var a))))).
 
-#EVAL[SNF] dpll.units_propagate f.
-
-#EVAL[SNF] dpll.solve f.
+#EVAL[SNF] p.Print sat_f.
+#EVAL[SNF] p.Print (dpll.solve sat_f).
+#EVAL[SNF] p.Print (dpll.solve unsat_f).

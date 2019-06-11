@@ -265,6 +265,10 @@ def solve_specialize : Formula -> VarOpt -> Formula.
 
 
 
+
+
+
+
 (; WIP: Pure litteral elimination ;)
 
 Occ : Type.
