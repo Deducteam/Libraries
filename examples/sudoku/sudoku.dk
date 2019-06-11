@@ -143,10 +143,10 @@ def exists : (ind -> bool) -> bool := f => exists' f 1.
 
 
 def mem_line : ind -> ind -> ind -> sudo -> bool.
-[i,j,k,s] mem_line i j k s --> exists (i' => eq (get i' j s) k).
+[i,j,k,s] mem_line i j k s --> exists (i':ind => eq (get i' j s) k).
 
 def mem_col  : ind -> ind -> ind -> sudo -> bool.
-[i,j,k,s] mem_col i j k s --> exists (j' => eq (get i j' s) k).
+[i,j,k,s] mem_col i j k s --> exists (j':ind => eq (get i j' s) k).
 
 def mem_squ  : ind -> ind -> ind -> sudo -> bool.
 [i,j,k,s] mem_squ i j k s -->
