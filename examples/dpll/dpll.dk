@@ -38,8 +38,6 @@ Variable : Type.
 (; We need decidable equality on variables ;)
 def eq : Variable -> Variable -> Bool.
 
-novar : Variable.
-
 
 (; -------------------------    Formulas    ----------------------- ;)
 
