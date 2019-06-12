@@ -1,4 +1,3 @@
-
 def Formula  := dpll.Formula.
 def Variable := dpll.Variable.
 def or  := dpll.For.

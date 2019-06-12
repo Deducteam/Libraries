@@ -29,3 +29,12 @@ def Unsolved : (f : dpll.Formula) -> a:Assignment -> F a.
   .
 
 def Print (f : dpll.Formula) : Printed := Unsolved f E.
+
+def Nat : Type.
+0 : Nat.
+S : Nat -> Nat.
+
+def size : dpll.Formula -> Nat.
+[] size  dpll.Ffalse --> 0
+[] size  dpll.Ftrue  --> 0
+[tl] size (dpll.Fcons _ tl) --> S (size tl).
