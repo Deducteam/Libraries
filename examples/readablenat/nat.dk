@@ -46,18 +46,18 @@ def fold_left : (d:Digit) -> (Digit -> N d -> N d) -> N d -> PNat.
 
 (; fold_left d f a x0...xn   reduces to    f xn (f ... (f x0 a))   ;)
 
-def fold_right : (c:Digit) -> (d:Digit) -> (d:Digit -> N d -> N d) -> N c -> PNat.
-[c,d,a,f] fold_right c d f a c --> a.
-[c,d,a,f] fold_right c d f a 0 --> f 0 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 1 --> f 1 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 2 --> f 2 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 3 --> f 3 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 4 --> f 4 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 5 --> f 5 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 6 --> f 6 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 7 --> f 7 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 8 --> f 8 (fold_right c d f a).
-[c,d,a,f] fold_right c d f a 9 --> f 9 (fold_right c d f a).
+def fold_right : (d:Digit) -> (d:Digit -> N d -> N d) -> N d -> PNat.
+[d,a,f] fold_right d f a d --> a.
+[d,a,f] fold_right d f a 0 --> f 0 (fold_right d f a).
+[d,a,f] fold_right d f a 1 --> f 1 (fold_right d f a).
+[d,a,f] fold_right d f a 2 --> f 2 (fold_right d f a).
+[d,a,f] fold_right d f a 3 --> f 3 (fold_right d f a).
+[d,a,f] fold_right d f a 4 --> f 4 (fold_right d f a).
+[d,a,f] fold_right d f a 5 --> f 5 (fold_right d f a).
+[d,a,f] fold_right d f a 6 --> f 6 (fold_right d f a).
+[d,a,f] fold_right d f a 7 --> f 7 (fold_right d f a).
+[d,a,f] fold_right d f a 8 --> f 8 (fold_right d f a).
+[d,a,f] fold_right d f a 9 --> f 9 (fold_right d f a).
 
 (; fold_right d f a x0...xn   reduces to    f x0 (f ... (f xn a))   ;)
 
@@ -95,14 +95,12 @@ def rebuild : d:Digit -> N d -> N d.
 [n]   rebuild 7 (x => carry (n x))  --> x => n 8 x.
 [n]   rebuild 8 (x => carry (n x))  --> x => n 9 x.
 [n]   rebuild 9 (x => carry (n x))  --> carry (n 0).
-(;
 [d,n] rebuild d n --> n.
-;)
 
 def nat : Digit.
 [] N nat --> Nat.
 
-def inc : Nat -> Nat := n:Nat => n (fold_right nat nat rebuild (x => carry x)) nat.
+def inc : Nat -> Nat := n:Nat => n (fold_right nat rebuild (x => carry x)) nat.
 
 
 
