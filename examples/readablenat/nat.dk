@@ -31,22 +31,35 @@ def Nat := PNat -> PNat.
 
 (; -----------------    Folding function     ------------ ;)
 
-def fold : (d:Digit) -> N d -> (Digit -> N d -> N d) -> PNat.
-[d,base,next] fold d base next d --> base.
-[d,base,next] fold d base next 0 -->  fold d (next 0 base) next.
-[d,base,next] fold d base next 1 -->  fold d (next 1 base) next.
-[d,base,next] fold d base next 2 -->  fold d (next 2 base) next.
-[d,base,next] fold d base next 3 -->  fold d (next 3 base) next.
-[d,base,next] fold d base next 4 -->  fold d (next 4 base) next.
-[d,base,next] fold d base next 5 -->  fold d (next 5 base) next.
-[d,base,next] fold d base next 6 -->  fold d (next 6 base) next.
-[d,base,next] fold d base next 7 -->  fold d (next 7 base) next.
-[d,base,next] fold d base next 8 -->  fold d (next 8 base) next.
-[d,base,next] fold d base next 9 -->  fold d (next 9 base) next.
+def fold_left : (d:Digit) -> (Digit -> N d -> N d) -> N d -> PNat.
+[d,f,a] fold_left d f a d --> a.
+[d,f,a] fold_left d f a 0 --> fold_left d f (f 0 a).
+[d,f,a] fold_left d f a 1 --> fold_left d f (f 1 a).
+[d,f,a] fold_left d f a 2 --> fold_left d f (f 2 a).
+[d,f,a] fold_left d f a 3 --> fold_left d f (f 3 a).
+[d,f,a] fold_left d f a 4 --> fold_left d f (f 4 a).
+[d,f,a] fold_left d f a 5 --> fold_left d f (f 5 a).
+[d,f,a] fold_left d f a 6 --> fold_left d f (f 6 a).
+[d,f,a] fold_left d f a 7 --> fold_left d f (f 7 a).
+[d,f,a] fold_left d f a 8 --> fold_left d f (f 8 a).
+[d,f,a] fold_left d f a 9 --> fold_left d f (f 9 a).
 
-(; fold c base next x0...xn   reduces to    next xn (next ... (next x0 base))   ;)
+(; fold_left d f a x0...xn   reduces to    f xn (f ... (f x0 a))   ;)
 
+def fold_right : (c:Digit) -> (d:Digit) -> (d:Digit -> N d -> N d) -> N c -> PNat.
+[c,d,a,f] fold_right c d f a c --> a.
+[c,d,a,f] fold_right c d f a 0 --> f 0 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 1 --> f 1 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 2 --> f 2 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 3 --> f 3 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 4 --> f 4 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 5 --> f 5 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 6 --> f 6 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 7 --> f 7 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 8 --> f 8 (fold_right c d f a).
+[c,d,a,f] fold_right c d f a 9 --> f 9 (fold_right c d f a).
 
+(; fold_right d f a x0...xn   reduces to    f x0 (f ... (f xn a))   ;)
 
 
 
@@ -71,25 +84,25 @@ def as_d : Digit -> Digit.
 
 def carry : PNat -> PNat.
 
-def rebuild : Digit -> Nat -> Nat.
-[n]   rebuild 0 (x => carry (n x))  --> x => n x 1.
-[n]   rebuild 1 (x => carry (n x))  --> x => n x 2.
-[n]   rebuild 2 (x => carry (n x))  --> x => n x 3.
-[n]   rebuild 3 (x => carry (n x))  --> x => n x 4.
-[n]   rebuild 4 (x => carry (n x))  --> x => n x 5.
-[n]   rebuild 5 (x => carry (n x))  --> x => n x 6.
-[n]   rebuild 6 (x => carry (n x))  --> x => n x 7.
-[n]   rebuild 7 (x => carry (n x))  --> x => n x 8.
-[n]   rebuild 8 (x => carry (n x))  --> x => n x 9.
-[n]   rebuild 9 (x => carry (n x))  --> x => carry (n x 0).
-[d,n] rebuild d (x => n x) --> x => n x (as_d d).
+def rebuild : d:Digit -> N d -> N d.
+[n]   rebuild 0 (x => carry (n x))  --> x => n 1 x.
+[n]   rebuild 1 (x => carry (n x))  --> x => n 2 x.
+[n]   rebuild 2 (x => carry (n x))  --> x => n 3 x.
+[n]   rebuild 3 (x => carry (n x))  --> x => n 4 x.
+[n]   rebuild 4 (x => carry (n x))  --> x => n 5 x.
+[n]   rebuild 5 (x => carry (n x))  --> x => n 6 x.
+[n]   rebuild 6 (x => carry (n x))  --> x => n 7 x.
+[n]   rebuild 7 (x => carry (n x))  --> x => n 8 x.
+[n]   rebuild 8 (x => carry (n x))  --> x => n 9 x.
+[n]   rebuild 9 (x => carry (n x))  --> carry (n 0).
+(;
+[d,n] rebuild d n --> n.
+;)
 
 def nat : Digit.
 [] N nat --> Nat.
 
-
-
-def inc : Nat -> Nat := n:Nat => n (fold nat (x => carry x) rebuild) nat.
+def inc : Nat -> Nat := n:Nat => n (fold_right nat nat rebuild (x => carry x)) nat.
 
 
 
@@ -101,7 +114,7 @@ cons : Digit -> DigitList -> DigitList.
 dl : Digit.
 [] N dl --> DigitList.
 
-def to_list : Nat -> DigitList := n => n (fold dl nil cons) dl.
+def to_list : Nat -> DigitList := n => n (fold_left dl cons nil) dl.
 
 def of_list : DigitList -> Nat.
 [ ] of_list nil        --> x => x
