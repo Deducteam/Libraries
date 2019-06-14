@@ -1,0 +1,130 @@
+(; ---------------------    Digits     ------------------ ;)
+Digit : Type.
+0 : Digit.
+1 : Digit.
+2 : Digit.
+3 : Digit.
+4 : Digit.
+5 : Digit.
+6 : Digit.
+7 : Digit.
+8 : Digit.
+9 : Digit.
+
+(; -----------------    Readable nats     --------------- ;)
+def N : Digit -> Type.
+def PNat : Type := a:Digit -> N a.
+
+[] N 0 --> PNat
+[] N 1 --> PNat
+[] N 2 --> PNat
+[] N 3 --> PNat
+[] N 4 --> PNat
+[] N 5 --> PNat
+[] N 6 --> PNat
+[] N 7 --> PNat
+[] N 8 --> PNat
+[] N 9 --> PNat.
+
+def Nat := PNat -> PNat.
+
+
+(; -----------------    Folding function     ------------ ;)
+
+def fold : (d:Digit) -> N d -> (Digit -> N d -> N d) -> PNat.
+[d,base,next] fold d base next d --> base.
+[d,base,next] fold d base next 0 -->  fold d (next 0 base) next.
+[d,base,next] fold d base next 1 -->  fold d (next 1 base) next.
+[d,base,next] fold d base next 2 -->  fold d (next 2 base) next.
+[d,base,next] fold d base next 3 -->  fold d (next 3 base) next.
+[d,base,next] fold d base next 4 -->  fold d (next 4 base) next.
+[d,base,next] fold d base next 5 -->  fold d (next 5 base) next.
+[d,base,next] fold d base next 6 -->  fold d (next 6 base) next.
+[d,base,next] fold d base next 7 -->  fold d (next 7 base) next.
+[d,base,next] fold d base next 8 -->  fold d (next 8 base) next.
+[d,base,next] fold d base next 9 -->  fold d (next 9 base) next.
+
+(; fold c base next x0...xn   reduces to    next xn (next ... (next x0 base))   ;)
+
+
+
+
+
+(; Building Nats from digits ;)
+
+def 10n_i : n:Nat -> d:Digit -> x:PNat -> N d
+         := n     => d       => x      => n x d.
+
+def as_d : Digit -> Digit.
+[d] N (as_d d) --> PNat.
+[] as_d 0 --> 0.
+[] as_d 1 --> 1.
+[] as_d 2 --> 2.
+[] as_d 3 --> 3.
+[] as_d 4 --> 4.
+[] as_d 5 --> 5.
+[] as_d 6 --> 6.
+[] as_d 7 --> 7.
+[] as_d 8 --> 8.
+[] as_d 9 --> 9.
+
+
+def carry : PNat -> PNat.
+
+def rebuild : Digit -> Nat -> Nat.
+[n]   rebuild 0 (x => carry (n x))  --> x => n x 1.
+[n]   rebuild 1 (x => carry (n x))  --> x => n x 2.
+[n]   rebuild 2 (x => carry (n x))  --> x => n x 3.
+[n]   rebuild 3 (x => carry (n x))  --> x => n x 4.
+[n]   rebuild 4 (x => carry (n x))  --> x => n x 5.
+[n]   rebuild 5 (x => carry (n x))  --> x => n x 6.
+[n]   rebuild 6 (x => carry (n x))  --> x => n x 7.
+[n]   rebuild 7 (x => carry (n x))  --> x => n x 8.
+[n]   rebuild 8 (x => carry (n x))  --> x => n x 9.
+[n]   rebuild 9 (x => carry (n x))  --> x => carry (n x 0).
+[d,n] rebuild d (x => n x) --> x => n x (as_d d).
+
+def nat : Digit.
+[] N nat --> Nat.
+
+
+
+def inc : Nat -> Nat := n:Nat => n (fold nat (x => carry x) rebuild) nat.
+
+
+
+(; Conversion to a list of digits ;)
+DigitList : Type.
+nil  : DigitList.
+cons : Digit -> DigitList -> DigitList.
+
+dl : Digit.
+[] N dl --> DigitList.
+
+def to_list : Nat -> DigitList := n => n (fold dl nil cons) dl.
+
+def of_list : DigitList -> Nat.
+[ ] of_list nil        --> x => x
+[l] of_list (cons 0 l) --> x => (of_list l) x 0
+[l] of_list (cons 1 l) --> x => (of_list l) x 1
+[l] of_list (cons 2 l) --> x => (of_list l) x 2
+[l] of_list (cons 3 l) --> x => (of_list l) x 3
+[l] of_list (cons 4 l) --> x => (of_list l) x 4
+[l] of_list (cons 5 l) --> x => (of_list l) x 5
+[l] of_list (cons 6 l) --> x => (of_list l) x 6
+[l] of_list (cons 7 l) --> x => (of_list l) x 7
+[l] of_list (cons 8 l) --> x => (of_list l) x 8
+[l] of_list (cons 9 l) --> x => (of_list l) x 9.
+
+
+def number : Nat := (x => x 9 2 3 4 5 3).
+
+def zero : Nat := (x => x 0).
+def one  : Nat := (x => x 1).
+
+
+#EVAL[SNF] 10n_i one 0.
+#EVAL[SNF] number.
+#EVAL[SNF] of_list (to_list number).
+
+#EVAL[SNF] inc number.
