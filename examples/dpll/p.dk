@@ -1,3 +1,5 @@
+#REQUIRE dpll.
+
 Printed : Type.
 Unsatisfiable : Printed.
 
@@ -17,12 +19,12 @@ Satisfiable : a:Assignment -> F a.
 def Unsolved : (f : dpll.Formula) -> a:Assignment -> F a.
 [] Unsolved dpll.Ffalse E --> Unsatisfiable.
 [] Unsolved dpll.Ftrue  --> Satisfiable.
-[b,v,F]
+[v,F]
   Unsolved (dpll.Fcons (dpll.Ccons (dpll.Flit dpll.T v) dpll.Cfalse) F)
   -->
   (Unsolved F) (isTrue v)
   .
-[b,v,F]
+[v,F]
   Unsolved (dpll.Fcons (dpll.Ccons (dpll.Flit dpll.F v) dpll.Cfalse) F)
   -->
   (Unsolved F) (isFalse v)

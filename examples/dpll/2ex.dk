@@ -49,4 +49,4 @@ def prb : Variable -> Formula.
 #EVAL[SNF] p.size (prb 9).
 ;)
 
-#EVAL[SNF] p.Print (dpll.solve (prb 9)).
+#EVAL[SNF] p.Print (dpll.solve (prb 5)).
