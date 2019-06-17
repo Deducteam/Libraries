@@ -1,3 +1,6 @@
+#REQUIRE dpll.
+#REQUIRE p.
+
 def Formula  := dpll.Formula.
 def Variable := dpll.Variable.
 def or  := dpll.For.
@@ -32,11 +35,12 @@ def prb : Variable -> Formula.
   and (prb v) (iif (not (var v)) (var (S v))).
 
 (;
-#EVAL[SNF] p.Print (dpll.solve (prb 0)).
-#EVAL[SNF] p.Print (dpll.solve (prb 1)).
-#EVAL[SNF] p.Print (dpll.solve (prb 2)).
-#EVAL[SNF] p.Print (dpll.solve (prb 3)).
-#EVAL[SNF] p.Print (dpll.solve (prb 4)).
+#EVAL[WHNF] (dpll.solve (prb 0)).
+#EVAL[WHNF] (dpll.solve (prb 1)).
+#EVAL[WHNF] (dpll.solve (prb 2)).
+#EVAL[WHNF] (dpll.solve (prb 3)).
+#EVAL[WHNF] (dpll.solve (prb 4)).
+
 #EVAL[SNF] p.Print (dpll.solve (prb 5)).
 #EVAL[SNF] p.Print (dpll.solve (prb 6)).
 #EVAL[SNF] p.Print (dpll.solve (prb 7)).
@@ -49,4 +53,4 @@ def prb : Variable -> Formula.
 #EVAL[SNF] p.size (prb 9).
 ;)
 
-#EVAL[SNF] p.Print (dpll.solve (prb 5)).
+#EVAL[SNF] p.Print (dpll.solve (prb 4)).
