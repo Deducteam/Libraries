@@ -29,6 +29,15 @@ def 7 := S 6.
 def 8 := S 7.
 def 9 := S 8.
 
+def plus : Variable -> Variable -> Variable.
+[  y] plus 0     y     --> y
+[x,y] plus (S x) y     --> S (plus x y).
+
+def times : Variable -> Variable -> Variable.
+[  y] times 0     y     --> y
+[x,y] times (S x) y     --> plus y (times x y).
+
+
 def prb : Variable -> Formula.
 [] prb 0     --> var 0.
 [v] prb (S v) -->
@@ -53,4 +62,4 @@ def prb : Variable -> Formula.
 #EVAL[SNF] p.size (prb 9).
 ;)
 
-#EVAL[SNF] p.Print (dpll.solve (prb 4)).
+#EVAL[SNF] p.Print (dpll.solve (prb (plus 9 9))).

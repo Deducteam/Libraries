@@ -20,12 +20,12 @@ def Unsolved : (f : dpll.Formula) -> a:Assignment -> F a.
 [] Unsolved dpll.Ffalse E --> Unsatisfiable.
 [] Unsolved dpll.Ftrue  --> Satisfiable.
 [v,F]
-  Unsolved (dpll.Fcons (dpll.Ccons (dpll.Flit dpll.T v) dpll.Cfalse) F)
+  Unsolved (dpll.Fcons (dpll.Ccons (dpll.Lit dpll.T v) dpll.Cfalse) F)
   -->
   (Unsolved F) (isTrue v)
   .
 [v,F]
-  Unsolved (dpll.Fcons (dpll.Ccons (dpll.Flit dpll.F v) dpll.Cfalse) F)
+  Unsolved (dpll.Fcons (dpll.Ccons (dpll.Lit dpll.F v) dpll.Cfalse) F)
   -->
   (Unsolved F) (isFalse v)
   .

@@ -134,7 +134,7 @@ def zero : Nat := (x => x 0).
 def one  : Nat := (x => x 1).
 
 
-#EVAL[SNF] 10n_i one 0.
+#EVAL[SNF] 10n_i number 0.
 #EVAL[SNF] number.
 #EVAL[SNF] of_list (to_list number).
 
