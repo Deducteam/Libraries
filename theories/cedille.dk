@@ -1,0 +1,60 @@
+true : Type.
+I    : true.
+
+Sort : Type.
+star : Sort.
+box : Sort.
+
+def Rule : Sort -> Sort -> Sort -> Type.
+[] Rule star box box   --> true.
+[] Rule box box box    --> true.
+[] Rule star star star --> true.
+[] Rule box star star  --> true.
+
+def Axiom : Sort -> Sort -> Type.
+[] Axiom star box --> true.
+
+Univ : Sort -> Type.
+
+Term : s:Sort -> Univ s -> Type.
+
+
+ecode : Type.
+def Eq : ecode -> ecode -> Type.
+[x] Eq x x --> true.
+erasure : t:Univ star -> Term star t -> ecode.
+
+code : Type.
+
+
+univ : s1 : Sort -> s2 : Sort -> Axiom s1 s2 -> Univ s2.
+prod : s1 : Sort -> s2 : Sort -> s3 : Sort -> Rule s1 s2 s3 -> A : Univ s1 ->
+       B : (Term s1 A -> Univ s2) -> Univ s3.
+forall : s1 : Sort -> s2 : Sort -> s3 : Sort -> Rule s1 s2 s3 -> A : Univ s1 ->
+       B : (Term s1 A -> Univ s2) -> Univ s3.
+iota : T:Univ star -> (Term star T -> Univ star) -> Univ star.
+
+eq   : code -> code -> Univ star.
+decode : s : Sort -> t:Univ s -> code -> Term s t.
+
+lam : (code -> code) -> code.
+
+
+i1 : T : Univ star -> f : (Term star T -> Univ star) -> Term star (iota T f) -> Term star T.
+
+i2 : T : Univ star -> f : (Term star T -> Univ star) -> i:Term star (iota T f) -> Term star (f (i1 T f i)).
+
+beta : t' : code -> t : code -> Term star (eq t' t').
+
+delta : T : Univ box -> t : Term star (eq (lam (x => lam (y => x))) (lam (x => lam (y => y))))
+                     -> Term box T.
+
+sigma : t1 : code -> t2 : code -> t : Term star (eq t1 t2) -> Term star (eq t2 t1).
+
+erase : s1 : Sort -> s2 : Sort -> s3 : Sort -> p:Rule s1 s2 s3 -> A : Univ s1 -> B : (Term s1 A -> Univ s2) -> Univ s3 -> t : Term s3 (forall s1 s2 s3 p A B) -> t' : Term s1 A -> Term s2 (B t').
+
+J : s : Sort -> t1 : code -> t2 : code -> t : Term star (eq t1 t2) -> t' : (code -> Univ s) -> t'' : Term s (t' t2) -> Term s (t' t1).
+
+mk_iota : t1 : Univ star -> t : Term star t1 -> t2 : (Term star t1 -> Univ star) -> t' : (Term star (t2 t)) -> Eq (erasure t1 t) (erasure (t2 t) t') -> Term star (iota t1 t2).
+(;
+phi : s : Sort -> t' -> Univ s -> t1 : Term s t' -> t2 : code -> t : (Term star (eq t1 t2)) ->  (decode s t' t1) -> Univ t'.;)
