@@ -110,7 +110,7 @@ and (or (not (var 50)) (or (not (var 35)) (not (var 29)))) (and (or (not (var 50
 
 
 
+#EVAL[SNF] p.Print (dpll.solve f).
 (;
 #EVAL[SNF] p.Print f.
-#EVAL[SNF] p.Print (dpll.solve f).
 ;)
