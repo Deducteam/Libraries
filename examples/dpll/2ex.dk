@@ -43,6 +43,9 @@ def prb : Variable -> Formula.
 [v] prb (S v) -->
   and (prb v) (iif (not (var v)) (var (S v))).
 
+#EVAL[SNF] p.Print (prb 0).
+#EVAL[SNF] p.Print (prb 5).
+
 (;
 #EVAL[WHNF] (dpll.solve (prb 0)).
 #EVAL[WHNF] (dpll.solve (prb 1)).
@@ -63,3 +66,6 @@ def prb : Variable -> Formula.
 ;)
 
 #EVAL[SNF] p.Print (dpll.solve (prb 9)).
+(;
+#EVAL[SNF] p.Print (dpll.solve (prb (plus 9 9))).
+;)

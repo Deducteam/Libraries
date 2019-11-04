@@ -80,7 +80,7 @@ def iteF : Bool -> Formula -> Formula -> Formula.
 def Fvar : Variable -> Formula.
 def Fnot : Formula -> Formula.
 def Fand : Formula -> Formula -> Formula.
-def For : Formula -> Formula -> Formula.
+def For  : Formula -> Formula -> Formula.
 
 
 [A,B] Fnot (For   A B) --> Fand (Fnot A) (Fnot B)
